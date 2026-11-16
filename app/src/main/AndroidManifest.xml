@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Sin permiso de INTERNET: 100% privada y local en el dispositivo -->
+
+    <!-- Declaración de paquetes de bancos y carteras para detectar cuáles están instalados
+         en el móvil (cumple las políticas de Google Play en Android 11+ sin usar QUERY_ALL_PACKAGES) -->
+    <queries>
+        <!-- Carteras NFC -->
+        <package android:name="com.google.android.apps.walletnfcrel" />
+        <package android:name="com.samsung.android.spay" />
+
+        <!-- Bancos españoles y europeos principales -->
+        <package android:name="es.openbank.mobile" />
+        <package android:name="es.bancosantander.apps" />
+        <package android:name="com.bbva.bbvacontigo" />
+        <package android:name="es.caixabank.caixabanknow" />
+        <package android:name="es.lacaixa.mobile.android.newwapicon" />
+        <package android:name="com.imaginbank.app" />
+        <package android:name="www.ingdirect.nativeframe" />
+        <package android:name="com.revolut.revolut" />
+        <package android:name="de.number26.android" />
+        <package android:name="net.inverline.bancosabadell.officelocator.android" />
+        <package android:name="com.bankinter.launcher" />
+        <package android:name="es.unicajabanco.app" />
+        <package android:name="com.abanca.bancamovil" />
+        <package android:name="com.abanca.b100" />
+        <package android:name="com.kutxabank.android" />
+        <package android:name="es.ibercaja.ibercajaapp" />
+        <package android:name="es.evobanco.bancamovil" />
+        <package android:name="es.myinvestor.app" />
+        <package android:name="de.traderepublic.app" />
+        <package android:name="com.transferwise.android" />
+        <package android:name="com.paypal.android.p2pmobile" />
+        <package android:name="com.imaginecurve.curve.prd" />
+        <package android:name="es.cetelem.mi.espacio.cliente" />
+        <package android:name="es.wizink.mobile" />
+        <package android:name="com.grupocooperativocajamar.wefferent" />
+        <package android:name="com.laboralkutxa.bancamovil" />
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.OpenbankWalletDedupe">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.OpenbankWalletDedupe">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Servicio que intercepta duplicados entre Google Wallet y los bancos activados -->
+        <service
+            android:name=".PayDedupeNotificationService"
+            android:label="@string/service_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+    </application>
+
+</manifest>
