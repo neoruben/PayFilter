@@ -42,12 +42,16 @@ object AppPreferences {
     private const val KEY_WINDOW_SECONDS = "window_seconds"
     private const val KEY_ENABLED_BANKS = "enabled_bank_packages"
     private const val KEY_HISTORY_JSON = "history_json"
+    private const val KEY_INTRO_DISMISSED = "intro_dismissed"
     private const val MAX_HISTORY_ITEMS = 50
 
     private lateinit var prefs: SharedPreferences
 
     private val _isFilterEnabled = MutableStateFlow(true)
     val isFilterEnabled: StateFlow<Boolean> = _isFilterEnabled.asStateFlow()
+
+    private val _isIntroDismissed = MutableStateFlow(false)
+    val isIntroDismissed: StateFlow<Boolean> = _isIntroDismissed.asStateFlow()
 
     private val _hidePolicy = MutableStateFlow(HidePolicy.HIDE_OPENBANK)
     val hidePolicy: StateFlow<HidePolicy> = _hidePolicy.asStateFlow()
@@ -73,6 +77,7 @@ object AppPreferences {
             )
         }.getOrDefault(HidePolicy.HIDE_OPENBANK)
         _windowSeconds.value = prefs.getInt(KEY_WINDOW_SECONDS, 60)
+        _isIntroDismissed.value = prefs.getBoolean(KEY_INTRO_DISMISSED, false)
 
         val savedBanks = prefs.getStringSet(KEY_ENABLED_BANKS, null)
         if (savedBanks != null) {
@@ -98,6 +103,12 @@ object AppPreferences {
         if (!::prefs.isInitialized) return
         prefs.edit().putBoolean(KEY_ENABLED, enabled).apply()
         _isFilterEnabled.value = enabled
+    }
+
+    fun setIntroDismissed(dismissed: Boolean) {
+        if (!::prefs.isInitialized) return
+        prefs.edit().putBoolean(KEY_INTRO_DISMISSED, dismissed).apply()
+        _isIntroDismissed.value = dismissed
     }
 
     fun setHidePolicy(policy: HidePolicy) {

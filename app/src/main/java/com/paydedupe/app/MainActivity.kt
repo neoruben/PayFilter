@@ -31,6 +31,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
@@ -81,7 +82,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.1"
+private const val APP_VERSION = "v1.2.2"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
@@ -112,6 +113,7 @@ fun PayFilterApp() {
     val hidePolicy by AppPreferences.hidePolicy.collectAsState()
     val enabledBanks by AppPreferences.enabledBankPackages.collectAsState()
     val history by AppPreferences.history.collectAsState()
+    val isIntroDismissed by AppPreferences.isIntroDismissed.collectAsState()
 
     var currentDestination by remember { mutableStateOf(AppDestination.BANKS) }
     var showDisclosureDialog by remember { mutableStateOf(false) }
@@ -401,6 +403,8 @@ fun PayFilterApp() {
                             onRequestPermission = { showDisclosureDialog = true },
                             onToggleMain = { AppPreferences.setFilterEnabled(it) },
                             onOpenDrawer = { scope.launch { drawerState.open() } },
+                            isIntroDismissed = isIntroDismissed,
+                            onDismissIntro = { AppPreferences.setIntroDismissed(true) },
                             onToggleBank = { pkg, enabled ->
                                 AppPreferences.setBankEnabled(pkg, enabled)
                             },
@@ -490,6 +494,8 @@ private fun BanksScreenContent(
     onRequestPermission: () -> Unit,
     onToggleMain: (Boolean) -> Unit,
     onOpenDrawer: () -> Unit,
+    isIntroDismissed: Boolean,
+    onDismissIntro: () -> Unit,
     onToggleBank: (String, Boolean) -> Unit,
     onOpenKofi: () -> Unit
 ) {
@@ -518,11 +524,14 @@ private fun BanksScreenContent(
         }
 
         // Pequeña "intro" explicativa y discreta que avisa de que la opción está en el menú lateral
-        item {
-            IntroExplanationCard(
-                currentPolicy = currentPolicy,
-                onOpenDrawer = onOpenDrawer
-            )
+        if (!isIntroDismissed) {
+            item {
+                IntroExplanationCard(
+                    currentPolicy = currentPolicy,
+                    onOpenDrawer = onOpenDrawer,
+                    onDismiss = onDismissIntro
+                )
+            }
         }
 
         // Listado de bancos instalados
@@ -555,7 +564,8 @@ private fun BanksScreenContent(
 @Composable
 private fun IntroExplanationCard(
     currentPolicy: HidePolicy,
-    onOpenDrawer: () -> Unit
+    onOpenDrawer: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -569,7 +579,7 @@ private fun IntroExplanationCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
+                .padding(start = 14.dp, top = 10.dp, bottom = 10.dp, end = 6.dp),
             verticalAlignment = Alignment.Top
         ) {
             Text("💡", fontSize = 18.sp, modifier = Modifier.padding(top = 2.dp))
@@ -586,6 +596,17 @@ private fun IntroExplanationCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 17.sp
+                )
+            }
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier.size(32.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = "Cerrar aviso",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(18.dp)
                 )
             }
         }
