@@ -30,7 +30,7 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 
 ## 📲 Instalación
 
-1. Descarga el archivo **`PayFilter-v1.2.2.apk`** desde la sección **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
+1. Descarga el archivo **`PayFilter-v1.2.3.apk`** desde la sección **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
 2. Instálalo en tu dispositivo Android (Android 10 / API 29 o superior).
 3. Abre **PayFilter**, concede el permiso de **Acceso a notificaciones** y elige qué bancos quieres filtrar.
 
@@ -41,3 +41,18 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 Si esta aplicación te resulta útil, puedes apoyar su desarrollo en **[Ko-fi](https://ko-fi.com/neoruben)**.
 
 > **Aviso legal:** Aplicación independiente no afiliada, patrocinada ni respaldada por Google ni por ninguna entidad bancaria. Los nombres comerciales se utilizan únicamente para indicar compatibilidad.
+
+---
+
+## 🛠️ Arquitectura y detalles técnicos
+
+- **Servicio de notificaciones (`PayDedupeNotificationService.kt`):** Extiende `NotificationListenerService`. Escucha las notificaciones de las carteras NFC (Google Wallet / Samsung Wallet) y de los bancos activados, y oculta la notificación duplicada (`cancelNotification`) cuando coincide exactamente el importe en una ventana de 60 segundos.
+- **Extractor de importes (`AmountExtractor.kt`):** Extrae y normaliza importes en euros a céntimos (`12,50 €`, `12.50 EUR`, `1.250,45 €`, etc.).
+- **Catálogo de bancos (`BankCatalog.kt`):** Lista de aplicaciones bancarias compatibles y detección de las que están instaladas en el dispositivo mediante `PackageManager`.
+- **Preferencias e historial (`AppPreferences.kt`):** Persistencia local en `SharedPreferences` expuesta mediante `StateFlow` (estado del filtro, bancos habilitados, política `HidePolicy`, estado de cierre del aviso introductorio e historial de notificaciones ocultadas).
+- **Interfaz (`MainActivity.kt`):** Jetpack Compose + Material 3 (`v1.2.3`, `versionCode = 6`). Menú lateral (`ModalNavigationDrawer`) ordenado en:
+  1. **Mis bancos y filtro** (pantalla principal con toggle global y lista de bancos).
+  2. **Notificaciones a mostrar** (selección inline de `HidePolicy` con el mismo estilo tipográfico `labelLarge` / `SemiBold`).
+  3. **Notificaciones ocultadas** (historial local con contador).
+  4. Acceso rápido a **Historial de Android** y **Ko-fi**.
+- **Nota de instalación (Android 13–16):** Al instalar un APK fuera de Google Play, Android restringe el permiso de acceso a notificaciones como *Ajuste restringido*. Se desbloquea en *Info de la app → Permitir ajustes restringidos* (tras intentar activar el permiso) o por ADB con `adb shell appops set com.paydedupe.app ACCESS_RESTRICTED_SETTINGS allow`.
