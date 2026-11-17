@@ -82,7 +82,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.2"
+private const val APP_VERSION = "v1.2.3"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
@@ -166,9 +166,15 @@ fun PayFilterApp() {
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Destino 1: Mis bancos y filtro (pantalla principal)
+                // 1. Mis bancos y filtro (pantalla principal)
                 NavigationDrawerItem(
-                    label = { Text("Mis bancos y filtro", fontWeight = FontWeight.SemiBold) },
+                    label = {
+                        Text(
+                            text = "Mis bancos y filtro",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
                     selected = (currentDestination == AppDestination.BANKS),
                     onClick = {
                         currentDestination = AppDestination.BANKS
@@ -178,43 +184,32 @@ fun PayFilterApp() {
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
 
-                // Destino 2: Notificaciones ocultadas (Historial)
-                NavigationDrawerItem(
-                    label = { Text("Notificaciones ocultadas", fontWeight = FontWeight.SemiBold) },
-                    selected = (currentDestination == AppDestination.HISTORY),
-                    onClick = {
-                        currentDestination = AppDestination.HISTORY
-                        scope.launch { drawerState.close() }
-                    },
-                    icon = { Text("📋", fontSize = 18.sp) },
-                    badge = {
-                        if (history.isNotEmpty()) {
-                            Badge {
-                                Text(history.size.toString())
-                            }
-                        }
-                    },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-
                 Spacer(modifier = Modifier.height(6.dp))
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // SELECCIÓN INLINE DIRECTA EN EL MENÚ LATERAL
+                // 2. Notificaciones a mostrar (selección inline directa en el menú lateral)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
                 ) {
-                    Text(
-                        text = "NOTIFICACIÓN A MOSTRAR",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary,
-                        letterSpacing = 0.6.sp
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("🔔", fontSize = 18.sp)
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = "Notificaciones a mostrar",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(2.dp))
 
                     HidePolicy.entries.forEach { policy ->
                         val isSelected = (policy == hidePolicy)
@@ -248,6 +243,35 @@ fun PayFilterApp() {
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(6.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+
+                // 3. Notificaciones ocultadas (Historial)
+                NavigationDrawerItem(
+                    label = {
+                        Text(
+                            text = "Notificaciones ocultadas",
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
+                    selected = (currentDestination == AppDestination.HISTORY),
+                    onClick = {
+                        currentDestination = AppDestination.HISTORY
+                        scope.launch { drawerState.close() }
+                    },
+                    icon = { Text("📋", fontSize = 18.sp) },
+                    badge = {
+                        if (history.isNotEmpty()) {
+                            Badge {
+                                Text(history.size.toString())
+                            }
+                        }
+                    },
+                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                )
 
                 Spacer(modifier = Modifier.height(6.dp))
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
