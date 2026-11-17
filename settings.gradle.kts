@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "PayDedupe"
+rootProject.name = "PayFilter"
 include(":app")
