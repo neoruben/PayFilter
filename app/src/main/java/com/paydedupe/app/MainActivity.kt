@@ -81,7 +81,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.0"
+private const val APP_VERSION = "v1.2.1"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
@@ -114,7 +114,6 @@ fun PayFilterApp() {
     val history by AppPreferences.history.collectAsState()
 
     var currentDestination by remember { mutableStateOf(AppDestination.BANKS) }
-    var showPolicyDialog by remember { mutableStateOf(false) }
     var showDisclosureDialog by remember { mutableStateOf(false) }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -155,17 +154,6 @@ fun PayFilterApp() {
         )
     }
 
-    if (showPolicyDialog) {
-        PolicySelectionDialog(
-            currentPolicy = hidePolicy,
-            onSelect = {
-                AppPreferences.setHidePolicy(it)
-                showPolicyDialog = false
-            },
-            onDismiss = { showPolicyDialog = false }
-        )
-    }
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -174,8 +162,9 @@ fun PayFilterApp() {
             ) {
                 DrawerHeader()
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
+                // Destino 1: Mis bancos y filtro (pantalla principal)
                 NavigationDrawerItem(
                     label = { Text("Mis bancos y filtro", fontWeight = FontWeight.SemiBold) },
                     selected = (currentDestination == AppDestination.BANKS),
@@ -187,28 +176,7 @@ fun PayFilterApp() {
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
 
-                NavigationDrawerItem(
-                    label = {
-                        Column {
-                            Text("Notificación a mostrar", fontWeight = FontWeight.SemiBold)
-                            Text(
-                                text = hidePolicy.label,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    },
-                    selected = false,
-                    onClick = {
-                        scope.launch {
-                            drawerState.close()
-                            showPolicyDialog = true
-                        }
-                    },
-                    icon = { Text("⚙️", fontSize = 18.sp) },
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
-                )
-
+                // Destino 2: Notificaciones ocultadas (Historial)
                 NavigationDrawerItem(
                     label = { Text("Notificaciones ocultadas", fontWeight = FontWeight.SemiBold) },
                     selected = (currentDestination == AppDestination.HISTORY),
@@ -227,10 +195,63 @@ fun PayFilterApp() {
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 Spacer(modifier = Modifier.height(8.dp))
 
+                // SELECCIÓN INLINE DIRECTA EN EL MENÚ LATERAL
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Text(
+                        text = "NOTIFICACIÓN A MOSTRAR",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary,
+                        letterSpacing = 0.6.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    HidePolicy.entries.forEach { policy ->
+                        val isSelected = (policy == hidePolicy)
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(8.dp))
+                                .clickable { AppPreferences.setHidePolicy(policy) }
+                                .padding(vertical = 6.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = { AppPreferences.setHidePolicy(policy) }
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Column {
+                                Text(
+                                    text = policy.label,
+                                    fontSize = 13.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = policy.description,
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f),
+                                    lineHeight = 14.sp
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(6.dp))
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+
+                // Acceso al Historial del sistema
                 NavigationDrawerItem(
                     label = { Text("Historial de Android") },
                     selected = false,
@@ -242,12 +263,9 @@ fun PayFilterApp() {
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
 
+                // Enlace Ko-fi
                 NavigationDrawerItem(
-                    label = {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Invitar a un café en Ko-fi", fontWeight = FontWeight.SemiBold)
-                        }
-                    },
+                    label = { Text("Invitar a un café en Ko-fi", fontWeight = FontWeight.SemiBold) },
                     selected = false,
                     onClick = {
                         scope.launch { drawerState.close() }
@@ -327,7 +345,7 @@ fun PayFilterApp() {
                                         fontSize = 11.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
                                     )
                                 }
                             }
@@ -382,7 +400,7 @@ fun PayFilterApp() {
                             enabledBanks = enabledBanks,
                             onRequestPermission = { showDisclosureDialog = true },
                             onToggleMain = { AppPreferences.setFilterEnabled(it) },
-                            onOpenPolicyDialog = { showPolicyDialog = true },
+                            onOpenDrawer = { scope.launch { drawerState.open() } },
                             onToggleBank = { pkg, enabled ->
                                 AppPreferences.setBankEnabled(pkg, enabled)
                             },
@@ -408,18 +426,18 @@ private fun DrawerHeader() {
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 20.dp, vertical = 24.dp)
+            .padding(horizontal = 20.dp, vertical = 20.dp)
     ) {
         Column {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(42.dp)
-                        .clip(RoundedCornerShape(12.dp))
+                        .size(40.dp)
+                        .clip(RoundedCornerShape(10.dp))
                         .background(Color(0xFF1E3A8A)),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("💳", fontSize = 22.sp)
+                    Text("💳", fontSize = 20.sp)
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
@@ -427,7 +445,7 @@ private fun DrawerHeader() {
                         Text(
                             text = "PayFilter",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 20.sp,
+                            fontSize = 19.sp,
                             color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Spacer(modifier = Modifier.width(6.dp))
@@ -451,7 +469,7 @@ private fun DrawerHeader() {
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Filtro de avisos repetidos para pagos móviles y bancos.",
                 style = MaterialTheme.typography.bodySmall,
@@ -471,7 +489,7 @@ private fun BanksScreenContent(
     enabledBanks: Set<String>,
     onRequestPermission: () -> Unit,
     onToggleMain: (Boolean) -> Unit,
-    onOpenPolicyDialog: () -> Unit,
+    onOpenDrawer: () -> Unit,
     onToggleBank: (String, Boolean) -> Unit,
     onOpenKofi: () -> Unit
 ) {
@@ -479,7 +497,7 @@ private fun BanksScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item { Spacer(modifier = Modifier.height(2.dp)) }
 
@@ -489,6 +507,7 @@ private fun BanksScreenContent(
             }
         }
 
+        // Interruptor compacto sin botones gigantes
         item {
             MainToggleCard(
                 isEnabled = isFilterEnabled,
@@ -498,42 +517,15 @@ private fun BanksScreenContent(
             )
         }
 
+        // Pequeña "intro" explicativa y discreta que avisa de que la opción está en el menú lateral
         item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onOpenPolicyDialog() },
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f)
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Aviso a mostrar: ${currentPolicy.label}",
-                            fontWeight = FontWeight.SemiBold,
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Text(
-                            text = "Toca aquí o abre el menú lateral ☰ para cambiarlo",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    TextButton(onClick = onOpenPolicyDialog) {
-                        Text("Cambiar")
-                    }
-                }
-            }
+            IntroExplanationCard(
+                currentPolicy = currentPolicy,
+                onOpenDrawer = onOpenDrawer
+            )
         }
 
+        // Listado de bancos instalados
         item {
             InstalledBanksCard(
                 allBanks = allBanks,
@@ -555,6 +547,107 @@ private fun BanksScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 12.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun IntroExplanationCard(
+    currentPolicy: HidePolicy,
+    onOpenDrawer: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onOpenDrawer() },
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(14.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Text("💡", fontSize = 18.sp, modifier = Modifier.padding(top = 2.dp))
+            Spacer(modifier = Modifier.width(10.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "¿Cómo filtra tus pagos?",
+                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = "Configuración actual: «${currentPolicy.label}». Puedes elegir qué notificación prefieres mantener visible tocando aquí o en el menú lateral (☰).",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    lineHeight = 17.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MainToggleCard(
+    isEnabled: Boolean,
+    hasPermission: Boolean,
+    activeBankCount: Int,
+    onToggle: (Boolean) -> Unit
+) {
+    val active = isEnabled && hasPermission
+    val containerColor = if (active) Color(0xFFE8F5E9) else MaterialTheme.colorScheme.surfaceVariant
+    val dotColor = if (active) Color(0xFF2E7D32) else Color(0xFF757575)
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = containerColor)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.weight(1f)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .clip(CircleShape)
+                        .background(dotColor)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                Column {
+                    Text(
+                        text = if (isEnabled) "Filtro activado" else "Filtro desactivado",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = if (!hasPermission) {
+                            "Pendiente de permiso de notificaciones"
+                        } else if (isEnabled) {
+                            "$activeBankCount banco(s) activo(s)"
+                        } else {
+                            "Sin filtrar duplicados"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+            Switch(
+                checked = isEnabled,
+                onCheckedChange = onToggle
             )
         }
     }
@@ -602,307 +695,6 @@ private fun KofiSupportCard(onOpenKofi: () -> Unit) {
                 Text(
                     text = "Invitar ☕",
                     fontWeight = FontWeight.Bold
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun HistoryScreenContent(
-    history: List<HiddenNotificationEntry>,
-    onOpenAndroidHistory: () -> Unit,
-    onClearHistory: () -> Unit
-) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        item { Spacer(modifier = Modifier.height(2.dp)) }
-
-        item {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Registro local de pagos duplicados",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                if (history.isNotEmpty()) {
-                    TextButton(onClick = onClearHistory) {
-                        Text("Limpiar lista")
-                    }
-                }
-            }
-        }
-
-        item {
-            OutlinedButton(
-                onClick = onOpenAndroidHistory,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Text("📱 Abrir Historial de notificaciones de Android")
-            }
-        }
-
-        if (history.isEmpty()) {
-            item {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    )
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("🎉", fontSize = 36.sp)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Aún no se ha ocultado ningún aviso duplicado.",
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = "Cuando pagues en una tienda con el móvil y coincida el importe exacto entre Google Wallet y tu banco, la notificación duplicada se filtrará y quedará registrada aquí.",
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-            }
-        } else {
-            items(history) { item ->
-                HiddenNotificationItemCard(item)
-            }
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-@Composable
-private fun PolicySelectionDialog(
-    currentPolicy: HidePolicy,
-    onSelect: (HidePolicy) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var selected by remember { mutableStateOf(currentPolicy) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "¿Qué notificación quieres ver al pagar?",
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Column {
-                Text(
-                    text = "Elige cuál de las dos notificaciones prefieres mantener visible en tu barra de estado cuando pagues con el móvil:",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 12.dp)
-                )
-
-                HidePolicy.entries.forEachIndexed { index, policy ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selected = policy }
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        RadioButton(
-                            selected = (policy == selected),
-                            onClick = { selected = policy }
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Column {
-                            Text(
-                                text = policy.label,
-                                fontWeight = FontWeight.SemiBold,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = policy.description,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                    }
-                    if (index < HidePolicy.entries.lastIndex) {
-                        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(onClick = { onSelect(selected) }) {
-                Text("Guardar preferencia")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        }
-    )
-}
-
-@Composable
-private fun ProminentDisclosureDialog(
-    onDismiss: () -> Unit,
-    onConfirm: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Uso del permiso de notificaciones",
-                fontWeight = FontWeight.Bold
-            )
-        },
-        text = {
-            Text(
-                text = "PayFilter necesita acceso a las notificaciones únicamente para detectar " +
-                    "cuándo Google Wallet y la app de tu banco muestran el mismo importe de pago " +
-                    "al mismo tiempo y ocultar el aviso duplicado.\n\n" +
-                    "• Ignora cualquier otra aplicación (WhatsApp, correo, etc.).\n" +
-                    "• Todo se procesa localmente en tu dispositivo.\n" +
-                    "• Esta app no tiene permiso de Internet: ningún dato sale de tu teléfono."
-            )
-        },
-        confirmButton = {
-            Button(onClick = onConfirm) {
-                Text("Entendido, abrir Ajustes")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancelar")
-            }
-        }
-    )
-}
-
-@Composable
-private fun PermissionWarningCard(onRequestPermission: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFF3E0)
-        )
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = "Permiso necesario: Acceso a notificaciones",
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFFE65100),
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(
-                text = "Para detectar cuándo llegan a la vez la notificación de Google Wallet y la de tu banco, activa \"PayFilter\" en los ajustes de Android.",
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF4E342E)
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Button(
-                onClick = onRequestPermission,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100))
-            ) {
-                Text("Conceder permiso en Ajustes")
-            }
-        }
-    }
-}
-
-@Composable
-private fun MainToggleCard(
-    isEnabled: Boolean,
-    hasPermission: Boolean,
-    activeBankCount: Int,
-    onToggle: (Boolean) -> Unit
-) {
-    val active = isEnabled && hasPermission
-    val containerColor = if (active) Color(0xFFE8F5E9) else MaterialTheme.colorScheme.surfaceVariant
-    val dotColor = if (active) Color(0xFF2E7D32) else Color(0xFF757575)
-
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = containerColor)
-    ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .clip(CircleShape)
-                            .background(dotColor)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = if (isEnabled) "Filtro ACTIVADO" else "Filtro DESACTIVADO",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = if (!hasPermission) {
-                                "Pendiente de permiso de notificaciones"
-                            } else if (isEnabled) {
-                                "Filtrando pagos duplicados en $activeBankCount banco(s) activo(s)"
-                            } else {
-                                "Se mostrarán todas las notificaciones sin filtrar"
-                            },
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-                Switch(
-                    checked = isEnabled,
-                    onCheckedChange = onToggle
-                )
-            }
-
-            Spacer(modifier = Modifier.height(14.dp))
-
-            Button(
-                onClick = { onToggle(!isEnabled) },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isEnabled) Color(0xFFC62828) else Color(0xFF2E7D32)
-                )
-            ) {
-                Text(
-                    text = if (isEnabled) "Desactivar aplicación" else "Activar aplicación",
-                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
@@ -1063,6 +855,162 @@ private fun BankToggleRow(
             checked = isEnabled,
             onCheckedChange = onToggle
         )
+    }
+}
+
+@Composable
+private fun HistoryScreenContent(
+    history: List<HiddenNotificationEntry>,
+    onOpenAndroidHistory: () -> Unit,
+    onClearHistory: () -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item { Spacer(modifier = Modifier.height(2.dp)) }
+
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Registro local de pagos duplicados",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                if (history.isNotEmpty()) {
+                    TextButton(onClick = onClearHistory) {
+                        Text("Limpiar lista")
+                    }
+                }
+            }
+        }
+
+        item {
+            OutlinedButton(
+                onClick = onOpenAndroidHistory,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text("📱 Abrir Historial de notificaciones de Android")
+            }
+        }
+
+        if (history.isEmpty()) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("🎉", fontSize = 36.sp)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Aún no se ha ocultado ningún aviso duplicado.",
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = "Cuando pagues en una tienda con el móvil y coincida el importe exacto entre Google Wallet y tu banco, la notificación duplicada se filtrará y quedará registrada aquí.",
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        } else {
+            items(history) { item ->
+                HiddenNotificationItemCard(item)
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun ProminentDisclosureDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = "Uso del permiso de notificaciones",
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Text(
+                text = "PayFilter necesita acceso a las notificaciones únicamente para detectar " +
+                    "cuándo Google Wallet y la app de tu banco muestran el mismo importe de pago " +
+                    "al mismo tiempo y ocultar el aviso duplicado.\n\n" +
+                    "• Ignora cualquier otra aplicación (WhatsApp, correo, etc.).\n" +
+                    "• Todo se procesa localmente en tu dispositivo.\n" +
+                    "• Esta app no tiene permiso de Internet: ningún dato sale de tu teléfono."
+            )
+        },
+        confirmButton = {
+            Button(onClick = onConfirm) {
+                Text("Entendido, abrir Ajustes")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
+
+@Composable
+private fun PermissionWarningCard(onRequestPermission: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFFFF3E0)
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = "Permiso necesario: Acceso a notificaciones",
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFE65100),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = "Para detectar cuándo llegan a la vez la notificación de Google Wallet y la de tu banco, activa \"PayFilter\" en los ajustes de Android.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF4E342E)
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Button(
+                onClick = onRequestPermission,
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFE65100))
+            ) {
+                Text("Conceder permiso en Ajustes")
+            }
+        }
     }
 }
 
