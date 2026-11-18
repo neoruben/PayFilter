@@ -300,14 +300,14 @@ fun PayFilterApp() {
                     icon = { Text("☕", fontSize = 18.sp) },
                     badge = {
                         Surface(
-                            color = Color(0xFFF5C518),
+                            color = Color(0xFFFF5E5B),
                             shape = RoundedCornerShape(6.dp)
                         ) {
                             Text(
-                                text = "Apoyo",
+                                text = "Ko-fi",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF0E1726),
+                                color = Color.White,
                                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                             )
                         }
@@ -732,13 +732,13 @@ private fun KofiSupportCard(onOpenKofi: () -> Unit) {
             Button(
                 onClick = onOpenKofi,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFF5C518),
-                    contentColor = Color(0xFF0E1726)
+                    containerColor = Color(0xFFFF5E5B),
+                    contentColor = Color.White
                 ),
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Text(
-                    text = "Invitar ☕",
+                    text = "☕ Ko-fi",
                     fontWeight = FontWeight.Bold
                 )
             }

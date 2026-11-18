@@ -1,19 +1,87 @@
+# PayFilter — Smart Duplicate Filter for NFC Mobile Payments 💳📱
+
+<p align="center">
+  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Download_APK-Android-2E7D32?style=for-the-badge" alt="Download APK for Android" height="44"></a>
+  &nbsp;
+  <a href="https://ko-fi.com/neoruben"><img src="https://img.shields.io/badge/☕_Support_on_Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white" alt="Support on Ko-fi" height="44"></a>
+</p>
+
+An open-source Android app built with **Kotlin + Jetpack Compose** that prevents duplicate notifications whenever you pay with your phone (**Google Wallet** or **Samsung Wallet**) using a card whose official banking app is also installed on your device.
+
+---
+
+## ✨ Key Features
+
+1. **Automatic Detection of Installed Banks:**
+   - Automatically identifies compatible banking apps installed on your device (Openbank, Santander, BBVA, CaixaBankNow, imagin, ING, Revolut, N26, Sabadell, Bankinter, Unicaja, ABANCA, B100, Kutxabank, Ibercaja, EVO Banco, MyInvestor, Trade Republic, Wise, PayPal, Curve, Cetelem, WiZink, Cajamar, Laboral Kutxa, and more).
+   - Easily toggle filters on or off per bank.
+2. **Clean & Accessible Navigation Drawer:**
+   - Compact interface without excessive scrolling: manage enabled banks directly from the home screen and easily access notification policies and filtered history via the side drawer.
+3. **Exact Amount Matching in Euros:**
+   - Parses and normalizes transaction amounts (`12,50 €`, `12.50 EUR`, `€12.50`, `1.250,45 €`...).
+   - Only suppresses the duplicate notification if both the NFC wallet and the bank report the **exact same amount** within a 60-second window.
+   - Physical card payments, web transactions, wire transfers, and Bizum payments will always notify normally.
+4. **Non-Destructive Filtering:**
+   - Only dismisses the repetitive pop-up from your status bar to prevent spam. All original notifications remain intact in **Android's Notification History** and in the app's local log.
+5. **100% Private & Fully Offline:**
+   - Does not request the `INTERNET` permission in `AndroidManifest.xml`. No data ever leaves your device.
+
+---
+
+## 📱 Installation
+
+1. Download **`PayFilter-v1.2.3.apk`** from the **[Releases](https://github.com/neoruben/PayFilter/releases/latest)** section.
+2. Install it on your Android device (Android 10 / API 29 or higher).
+3. Open **PayFilter**, grant **Notification Access**, and select which bank notifications you want to filter.
+
+> **Note for Android 13–16:** When sideloading an APK outside Google Play, Android restricts notification listener permissions under *Restricted settings*. You can unlock it by tapping *App Info → three dots (top right) → Allow restricted settings* (after trying to enable notification access once), or via ADB:  
+> `adb shell appops set com.paydedupe.app ACCESS_RESTRICTED_SETTINGS allow`
+
+---
+
+## ☕ Support the Project
+
+If **PayFilter** saves you from annoying notification spam, you can support its independent development by inviting me to a coffee:
+
+[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-Buy%20me%20a%20coffee-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/neoruben)
+
+> **Disclaimer:** Independent project not affiliated with, sponsored, or endorsed by Google, Samsung, or any financial institution. Trademarks are used solely to indicate compatibility.
+
+---
+
+## 🛠️ Architecture & Technical Details
+
+- **Notification Service (`PayDedupeNotificationService.kt`):** Extends `NotificationListenerService`. Listens for notifications from NFC wallets (Google Wallet / Samsung Wallet) and active banks, canceling duplicate alerts (`cancelNotification`) when exact euro amounts match within 60 seconds.
+- **Amount Extractor (`AmountExtractor.kt`):** Extracts and normalizes transaction amounts in euros to cents (`12,50 €`, `12.50 EUR`, `1.250,45 €`, etc.).
+- **Bank Catalog (`BankCatalog.kt`):** Registry of compatible banking apps with detection via `PackageManager`.
+- **Preferences & History (`AppPreferences.kt`):** Local `SharedPreferences` exposed via `StateFlow` (global filter state, bank toggles, `HidePolicy`, dismiss state for intro card, and filtered history log).
+- **UI (`MainActivity.kt`):** Jetpack Compose + Material 3. Side drawer navigation organized into *My Banks*, *Notifications to show*, *Filtered history*, and quick access to *Android History* and *Ko-fi*.
+
+<br>
+
+---
+---
+
+<br>
+
+## 🇪🇸 Versión en español
+
 # PayFilter — Filtro inteligente de pagos NFC duplicados
 
 <p align="center">
   <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Descargar_APK-Android-2E7D32?style=for-the-badge" alt="Descargar APK para Android" height="44"></a>
   &nbsp;
-  <a href="https://ko-fi.com/neoruben"><img src="https://img.shields.io/badge/☕_Invítame_a_un_café-Ko--fi-f5c518?style=for-the-badge&labelColor=0e1726" alt="Invítame a un café en Ko-fi" height="44"></a>
+  <a href="https://ko-fi.com/neoruben"><img src="https://img.shields.io/badge/☕_Invítame_a_un_café-Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white" alt="Invítame a un café en Ko-fi" height="44"></a>
 </p>
 
 Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones duplicadas cuando pagas con el móvil (**Google Wallet** o **Samsung Wallet**) usando una tarjeta bancaria cuya aplicación oficial también tienes instalada en el teléfono.
 
 ---
 
-## ✨ Características principales
+### ✨ Características principales
 
 1. **Detección automática de tus bancos instalados:**
-   - Detecta qué aplicaciones bancarias tienes instaladas en el móvil (Openbank, Santander, BBVA, CaixaBankNow, imagin, ING, Revolut, N26, Sabadell, Bankinter, Unicaja, ABANCA, B100, Kutxabank, Ibercaja, EVO Banco, MyInvestor, Trade Republic, Wise, PayPal, Curve, Cetelem, WiZink, Cajamar y Laboral Kutxa).
+   - Detecta qué aplicaciones bancarias tienes instaladas en el móvil (Openbank, Santander, BBVA, CaixaBankNow, imagin, ING, Revolut, N26, Sabadell, Bankinter, Unicaja, ABANCA, B100, Kutxabank, Ibercaja, EVO Banco, MyInvestor, Trade Republic, Wise, PayPal, Curve, Cetelem, WiZink, Cajamar, Laboral Kutxa, etc.).
    - Permite activar o desactivar el filtro de forma individual para cada banco con un interruptor.
 2. **Panel lateral limpio y accesible:**
    - Interfaz compacta sin desplazamientos excesivos: gestiona tus bancos directamente en la pantalla de inicio y accede a tus preferencias de notificación y al historial de alertas filtradas cómodamente desde el panel lateral.
@@ -28,7 +96,7 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 
 ---
 
-## 📲 Instalación
+### 📱 Instalación
 
 1. Descarga el archivo **`PayFilter-v1.2.3.apk`** desde la sección **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
 2. Instálalo en tu dispositivo Android (Android 10 / API 29 o superior).
@@ -36,23 +104,10 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 
 ---
 
-## ☕ Apoya el proyecto
+### ☕ Apoya el proyecto
 
-Si esta aplicación te resulta útil, puedes apoyar su desarrollo en **[Ko-fi](https://ko-fi.com/neoruben)**.
+Si esta aplicación te resulta útil, puedes apoyar su desarrollo invitándome a un café en **[Ko-fi](https://ko-fi.com/neoruben)**:
+
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-Invitar%20a%20un%20caf%C3%A9-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/neoruben)
 
 > **Aviso legal:** Aplicación independiente no afiliada, patrocinada ni respaldada por Google ni por ninguna entidad bancaria. Los nombres comerciales se utilizan únicamente para indicar compatibilidad.
-
----
-
-## 🛠️ Arquitectura y detalles técnicos
-
-- **Servicio de notificaciones (`PayDedupeNotificationService.kt`):** Extiende `NotificationListenerService`. Escucha las notificaciones de las carteras NFC (Google Wallet / Samsung Wallet) y de los bancos activados, y oculta la notificación duplicada (`cancelNotification`) cuando coincide exactamente el importe en una ventana de 60 segundos.
-- **Extractor de importes (`AmountExtractor.kt`):** Extrae y normaliza importes en euros a céntimos (`12,50 €`, `12.50 EUR`, `1.250,45 €`, etc.).
-- **Catálogo de bancos (`BankCatalog.kt`):** Lista de aplicaciones bancarias compatibles y detección de las que están instaladas en el dispositivo mediante `PackageManager`.
-- **Preferencias e historial (`AppPreferences.kt`):** Persistencia local en `SharedPreferences` expuesta mediante `StateFlow` (estado del filtro, bancos habilitados, política `HidePolicy`, estado de cierre del aviso introductorio e historial de notificaciones ocultadas).
-- **Interfaz (`MainActivity.kt`):** Jetpack Compose + Material 3 (`v1.2.3`, `versionCode = 6`). Menú lateral (`ModalNavigationDrawer`) ordenado en:
-  1. **Mis bancos y filtro** (pantalla principal con toggle global y lista de bancos).
-  2. **Notificaciones a mostrar** (selección inline de `HidePolicy` con el mismo estilo tipográfico `labelLarge` / `SemiBold`).
-  3. **Notificaciones ocultadas** (historial local con contador).
-  4. Acceso rápido a **Historial de Android** y **Ko-fi**.
-- **Nota de instalación (Android 13–16):** Al instalar un APK fuera de Google Play, Android restringe el permiso de acceso a notificaciones como *Ajuste restringido*. Se desbloquea en *Info de la app → Permitir ajustes restringidos* (tras intentar activar el permiso) o por ADB con `adb shell appops set com.paydedupe.app ACCESS_RESTRICTED_SETTINGS allow`.
