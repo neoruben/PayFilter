@@ -1,9 +1,11 @@
 # PayFilter — Smart Duplicate Filter for NFC Mobile Payments 💳📱
 
 <p align="center">
-  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Download_APK-Android-2E7D32?style=for-the-badge" alt="Download APK for Android" height="44"></a>
+  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Download_APK-Android-2E7D32?style=for-the-badge" alt="Download APK for Android" height="38"></a>
   &nbsp;
-  <a href="https://ko-fi.com/neoruben"><img src="https://img.shields.io/badge/☕_Support_on_Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white" alt="Support on Ko-fi" height="44"></a>
+  <a href="https://ko-fi.com/neoruben" target="_blank">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="38">
+  </a>
 </p>
 
 An open-source Android app built with **Kotlin + Jetpack Compose** that prevents duplicate notifications whenever you pay with your phone (**Google Wallet** or **Samsung Wallet**) using a card whose official banking app is also installed on your device.
@@ -43,7 +45,11 @@ An open-source Android app built with **Kotlin + Jetpack Compose** that prevents
 
 If **PayFilter** saves you from annoying notification spam, you can support its independent development by inviting me to a coffee:
 
-[![Support on Ko-fi](https://img.shields.io/badge/Ko--fi-Buy%20me%20a%20coffee-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/neoruben)
+<p align="center">
+  <a href="https://ko-fi.com/neoruben" target="_blank">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="38">
+  </a>
+</p>
 
 > **Disclaimer:** Independent project not affiliated with, sponsored, or endorsed by Google, Samsung, or any financial institution. Trademarks are used solely to indicate compatibility.
 
@@ -69,9 +75,11 @@ If **PayFilter** saves you from annoying notification spam, you can support its 
 # PayFilter — Filtro inteligente de pagos NFC duplicados
 
 <p align="center">
-  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Descargar_APK-Android-2E7D32?style=for-the-badge" alt="Descargar APK para Android" height="44"></a>
+  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Descargar_APK-Android-2E7D32?style=for-the-badge" alt="Descargar APK para Android" height="38"></a>
   &nbsp;
-  <a href="https://ko-fi.com/neoruben"><img src="https://img.shields.io/badge/☕_Invítame_a_un_café-Ko--fi-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white" alt="Invítame a un café en Ko-fi" height="44"></a>
+  <a href="https://ko-fi.com/neoruben" target="_blank">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="38">
+  </a>
 </p>
 
 Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones duplicadas cuando pagas con el móvil (**Google Wallet** o **Samsung Wallet**) usando una tarjeta bancaria cuya aplicación oficial también tienes instalada en el teléfono.
@@ -108,6 +116,10 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 
 Si esta aplicación te resulta útil, puedes apoyar su desarrollo invitándome a un café en **[Ko-fi](https://ko-fi.com/neoruben)**:
 
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-Invitar%20a%20un%20caf%C3%A9-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/neoruben)
+<p align="center">
+  <a href="https://ko-fi.com/neoruben" target="_blank">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="38">
+  </a>
+</p>
 
 > **Aviso legal:** Aplicación independiente no afiliada, patrocinada ni respaldada por Google ni por ninguna entidad bancaria. Los nombres comerciales se utilizan únicamente para indicar compatibilidad.
