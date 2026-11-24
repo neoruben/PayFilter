@@ -1,14 +1,32 @@
-# PayFilter
+<p align="center">
+  <img src="docs/icon.svg" width="128" height="128" alt="Icono de PayFilter">
+</p>
+
+<h1 align="center">PayFilter</h1>
 
 <p align="center">
-  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Descargar_APK-Android-2E7D32?style=for-the-badge" alt="Descargar APK para Android" height="38"></a>
+  <b>Un pago, un aviso.</b><br>
+  Oculta la notificación repetida cuando pagas con el móvil y te avisan a la vez la cartera y el banco.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Android-10%2B-3DDC84?logo=android&logoColor=white" alt="Android 10 o superior">
+  <img src="https://img.shields.io/badge/Google_Wallet-Samsung_Wallet-2563EB" alt="Google Wallet y Samsung Wallet">
+  <img src="https://img.shields.io/badge/sin_internet-100%25_privada-10B981" alt="Sin internet, 100 % privada">
+  <img src="https://img.shields.io/badge/gratis-sin_anuncios-FBBF24" alt="Gratis y sin anuncios">
+</p>
+
+<p align="center">
+  <a href="https://github.com/neoruben/PayFilter/releases/latest"><img src="https://img.shields.io/badge/⬇_Descargar_APK-Android-1E3A8A?style=for-the-badge" alt="Descargar APK para Android" height="38"></a>
   &nbsp;
   <a href="https://ko-fi.com/neoruben" target="_blank">
     <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi" height="38">
   </a>
 </p>
 
-*[English version below](#english)*
+<p align="center"><a href="#english">🇬🇧 English version below</a></p>
+
+---
 
 Cuando pagas con el móvil (**Google Wallet** o **Samsung Wallet**) y también tienes instalada la app de tu banco, te llegan **dos notificaciones del mismo pago**: una de la cartera y otra del banco. **PayFilter oculta la repetida** para que cada pago te avise una sola vez.
 

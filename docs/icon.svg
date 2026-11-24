@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="18 18 72 72" width="256" height="256">
+  <!-- Icono de PayFilter, igual que el icono adaptativo de la app (ic_launcher_background + ic_launcher_foreground) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="108" y2="108" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1E3A8A"/>
+      <stop offset="0.5" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#0284C7"/>
+    </linearGradient>
+    <clipPath id="shape">
+      <rect x="18" y="18" width="72" height="72" rx="18"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#shape)">
+    <rect x="0" y="0" width="108" height="108" fill="url(#bg)"/>
+    <circle cx="54" cy="54" r="40" fill="#FFFFFF" fill-opacity="0.082"/>
+
+    <!-- Tarjeta secundaria (duplicado) -->
+    <path transform="rotate(-9 49 43)" fill="#FFFFFF" fill-opacity="0.125" stroke="#FFFFFF" stroke-opacity="0.376" stroke-width="2.2"
+          d="M31,27 h36 a6,6 0 0 1 6,6 v20 a6,6 0 0 1 -6,6 h-36 a6,6 0 0 1 -6,-6 v-20 a6,6 0 0 1 6,-6 z"/>
+
+    <!-- Tarjeta principal -->
+    <path fill="#FFFFFF" fill-opacity="0.25" stroke="#FFFFFF" stroke-width="2.5"
+          d="M41,35 h40 a6,6 0 0 1 6,6 v22 a6,6 0 0 1 -6,6 h-40 a6,6 0 0 1 -6,-6 v-22 a6,6 0 0 1 6,-6 z"/>
+
+    <!-- Chip -->
+    <path fill="#FBBF24" d="M44,44 h8 a1.5,1.5 0 0 1 1.5,1.5 v5 a1.5,1.5 0 0 1 -1.5,1.5 h-8 a1.5,1.5 0 0 1 -1.5,-1.5 v-5 a1.5,1.5 0 0 1 1.5,-1.5 z"/>
+    <path fill="none" stroke="#D97706" stroke-width="0.8" d="M42.5,47.5 h9.5 M48,44 v8"/>
+
+    <!-- Ondas contactless -->
+    <path fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" d="M69,43 a5,5 0 0 1 0,10"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" d="M74,40 a9,9 0 0 1 0,16"/>
+
+    <!-- Sello con check -->
+    <circle cx="34" cy="74" r="13" fill="#10B981" stroke="#FFFFFF" stroke-width="2.5"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M28.5,74 L32.5,78 L39.5,70"/>
+  </g>
+</svg>
