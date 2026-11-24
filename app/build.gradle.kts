@@ -21,7 +21,7 @@ val signingStoreFile: File? = signingProps?.getProperty("storeFile")?.trim()?.le
 }
 
 android {
-    namespace = "com.paydedupe.app"
+    namespace = "com.neoruben.payfilter"
     compileSdk = 35
 
     signingConfigs {
@@ -34,11 +34,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.paydedupe.app"
+        applicationId = "com.neoruben.payfilter"
         minSdk = 29
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.2.4"
+        versionCode = 8
+        versionName = "1.2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,4 +1,4 @@
-package com.paydedupe.app
+package com.neoruben.payfilter
 
 import android.content.ComponentName
 import android.content.Context
@@ -82,7 +82,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.4"
+private const val APP_VERSION = "v1.2.5"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
@@ -1103,7 +1103,7 @@ private fun HiddenNotificationItemCard(item: HiddenNotificationEntry) {
 }
 
 private fun isNotificationServiceEnabled(context: Context): Boolean {
-    val expectedComponent = ComponentName(context, PayDedupeNotificationService::class.java)
+    val expectedComponent = ComponentName(context, PayFilterNotificationService::class.java)
     val enabledListeners = Settings.Secure.getString(
         context.contentResolver,
         "enabled_notification_listeners"

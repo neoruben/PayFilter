@@ -1,10 +1,10 @@
-package com.paydedupe.app
+package com.neoruben.payfilter
 
 import android.app.Notification
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 
-class PayDedupeNotificationService : NotificationListenerService() {
+class PayFilterNotificationService : NotificationListenerService() {
 
     private enum class SourceKind {
         WALLET,

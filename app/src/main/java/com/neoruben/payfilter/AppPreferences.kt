@@ -1,4 +1,4 @@
-package com.paydedupe.app
+package com.neoruben.payfilter
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -36,7 +36,7 @@ data class HiddenNotificationEntry(
 )
 
 object AppPreferences {
-    private const val PREFS_NAME = "pay_dedupe_prefs"
+    private const val PREFS_NAME = "payfilter_prefs"
     private const val KEY_ENABLED = "filter_enabled"
     private const val KEY_HIDE_POLICY = "hide_policy"
     private const val KEY_WINDOW_SECONDS = "window_seconds"

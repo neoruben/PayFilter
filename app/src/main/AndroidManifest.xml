@@ -45,12 +45,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.OpenbankWalletDedupe">
+        android:theme="@style/Theme.PayFilter">
 
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.OpenbankWalletDedupe">
+            android:theme="@style/Theme.PayFilter">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,7 +59,7 @@
 
         <!-- Servicio que intercepta duplicados entre Google Wallet y los bancos activados -->
         <service
-            android:name=".PayDedupeNotificationService"
+            android:name=".PayFilterNotificationService"
             android:label="@string/service_name"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
             android:exported="false">

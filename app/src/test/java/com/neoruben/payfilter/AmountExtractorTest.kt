@@ -1,4 +1,4 @@
-package com.paydedupe.app
+package com.neoruben.payfilter
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
