@@ -32,7 +32,7 @@ An open-source Android app built with **Kotlin + Jetpack Compose** that prevents
 
 ## 📱 Installation
 
-1. Download **`PayFilter-v1.2.3.apk`** from the **[Releases](https://github.com/neoruben/PayFilter/releases/latest)** section.
+1. Download **`PayFilter-v1.2.4.apk`** from the **[Releases](https://github.com/neoruben/PayFilter/releases/latest)** section.
 2. Install it on your Android device (Android 10 / API 29 or higher).
 3. Open **PayFilter**, grant **Notification Access**, and select which bank notifications you want to filter.
 
@@ -106,7 +106,7 @@ Aplicación Android en **Kotlin + Jetpack Compose** que evita las notificaciones
 
 ### 📱 Instalación
 
-1. Descarga el archivo **`PayFilter-v1.2.3.apk`** desde la sección **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
+1. Descarga el archivo **`PayFilter-v1.2.4.apk`** desde la sección **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
 2. Instálalo en tu dispositivo Android (Android 10 / API 29 o superior).
 3. Abre **PayFilter**, concede el permiso de **Acceso a notificaciones** y elige qué bancos quieres filtrar.
 

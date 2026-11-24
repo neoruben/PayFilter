@@ -82,7 +82,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.3"
+private const val APP_VERSION = "v1.2.4"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
