@@ -1,5 +1,6 @@
 package com.neoruben.payfilter
 
+import android.app.NotificationManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -82,7 +83,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import kotlinx.coroutines.launch
 
 private const val KOFI_URL = "https://ko-fi.com/neoruben"
-private const val APP_VERSION = "v1.2.5"
+private const val APP_VERSION = "v1.2.6"
 
 enum class AppDestination(val title: String) {
     BANKS("PayFilter"),
@@ -1103,15 +1104,12 @@ private fun HiddenNotificationItemCard(item: HiddenNotificationEntry) {
 }
 
 private fun isNotificationServiceEnabled(context: Context): Boolean {
-    val expectedComponent = ComponentName(context, PayFilterNotificationService::class.java)
-    val enabledListeners = Settings.Secure.getString(
-        context.contentResolver,
-        "enabled_notification_listeners"
-    ) ?: return false
-
-    return enabledListeners.split(":").any {
-        ComponentName.unflattenFromString(it) == expectedComponent
-    }
+    // API oficial (Android 8.1+): no depende de leer el ajuste oculto enabled_notification_listeners,
+    // que en versiones recientes de Android puede no ser legible por las apps.
+    val component = ComponentName(context, PayFilterNotificationService::class.java)
+    val notificationManager = context.getSystemService(NotificationManager::class.java) ?: return false
+    return runCatching { notificationManager.isNotificationListenerAccessGranted(component) }
+        .getOrDefault(false)
 }
 
 private fun openAndroidNotificationHistory(context: Context) {

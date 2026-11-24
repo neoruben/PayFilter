@@ -23,7 +23,7 @@ Funciona con Openbank, Santander, BBVA, CaixaBank, imagin, ING, Revolut, N26, Sa
 
 Necesita Android 10 o superior.
 
-1. Descarga **`PayFilter-v1.2.5.apk`** desde **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
+1. Descarga **`PayFilter-v1.2.6.apk`** desde **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
    Si tienes una versión anterior a la 1.2.5, desinstálala antes: desde la 1.2.5 la app es otra para Android y las dos estarían filtrando a la vez.
 2. **Pausa Play Protect mientras la instalas.** Play Protect puede bloquear o borrar las apps que no vienen de Google Play. Abre **Play Store → tu foto de perfil → Play Protect → ⚙ (arriba a la derecha)** y desactiva **Analizar apps con Play Protect**.
 3. Abre el APK e instálalo (si te lo pide, permite que tu navegador o tu gestor de archivos instale apps).
@@ -72,7 +72,7 @@ Works with Openbank, Santander, BBVA, CaixaBank, imagin, ING, Revolut, N26, Saba
 
 Requires Android 10 or newer.
 
-1. Download **`PayFilter-v1.2.5.apk`** from **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
+1. Download **`PayFilter-v1.2.6.apk`** from **[Releases](https://github.com/neoruben/PayFilter/releases/latest)**.
    If you have a version older than 1.2.5, uninstall it first: from 1.2.5 on, Android sees it as a different app, and both would be filtering at once.
 2. **Pause Play Protect while you install it.** Play Protect may block or delete apps that don't come from Google Play. Open the **Play Store → your profile picture → Play Protect → ⚙ (top right)** and turn off **Scan apps with Play Protect**.
 3. Open the APK and install it (if asked, allow your browser or file manager to install apps).
