@@ -1,11 +1,37 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
 
+// Firma de la versión publicada: datos en keystore.properties (nunca se sube a git).
+// Se busca en la raíz del proyecto y, si no está, en Documentos/claves (compartido con otras apps).
+// Sin ese archivo, la versión release sale sin firmar.
+val signingPropsFile: File? = listOf(
+    rootProject.file("keystore.properties"),
+    File(System.getProperty("user.home"), "Documents/claves/keystore.properties"),
+).firstOrNull { it.isFile }
+val signingProps: Properties? = signingPropsFile?.let { f ->
+    Properties().apply { f.reader(Charsets.UTF_8).use { load(it) } }
+}
+// Si la ruta de storeFile no existe (p. ej. escrita con otro nombre de usuario), se busca junto a keystore.properties.
+val signingStoreFile: File? = signingProps?.getProperty("storeFile")?.trim()?.let { path ->
+    File(path).takeIf { it.isFile } ?: File(signingPropsFile!!.parentFile, File(path).name)
+}
+
 android {
     namespace = "com.paydedupe.app"
     compileSdk = 35
+
+    signingConfigs {
+        if (signingProps != null && signingStoreFile != null) create("release") {
+            storeFile = signingStoreFile
+            storePassword = signingProps.getProperty("storePassword")
+            keyAlias = signingProps.getProperty("keyAlias")
+            keyPassword = signingProps.getProperty("keyPassword")
+        }
+    }
 
     defaultConfig {
         applicationId = "com.paydedupe.app"
@@ -20,7 +46,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.findByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
